@@ -2,7 +2,7 @@ package com.github.h0ru5.neopixel;
 
 public class Neopixels {
 
-    private final ws2811_channel_t channel;
+    private ws2811_channel_t channel;
     private final ws2811_t leds = new ws2811_t();
 
     private int brightness;
@@ -33,18 +33,35 @@ public class Neopixels {
     public static void main(String[] args) {
         System.loadLibrary("rpi_ws281x");
 
-        Neopixels np = Neopixels.createWithDefaults(64);
-        np.init();
-        np.render();
+       // Neopixels np = Neopixels.createWithDefaults(64);
+       // np.init();
+       // np.render();
+
+        ws2811_t leds = new ws2811_t();
+        for(int i=0;i<2;i++) {
+            ws2811_channel_t channel_t = rpi_ws281x.ws2811_channel_get(leds, i);
+            channel_t.setCount(64);
+            channel_t.setInvert(0);
+            channel_t.setGpionum(18);
+            channel_t.setBrightness(0);
+        }
+
+        rpi_ws281x.ws2811_init(leds);
+        System.out.println("initialized");
 
         boolean swapped = false;
 
         while (true) {
 
             for (int i = 0; i < 64; i++) {
-                np.setColor(i, swapped ? NeoPixelColor.RED : NeoPixelColor.GREEN);
-		System.out.println("setting " + i + " to "  +  ((swapped)? "red" : "green"));
-                np.render();
+                //np.setColor(i, swapped ? NeoPixelColor.RED : NeoPixelColor.GREEN);
+                System.out.println("setting backbuffer " + i + " to " + (long) 0x200000);
+                ws2811_channel_t m_channel = rpi_ws281x.ws2811_channel_get(leds,0);
+                System.out.println("got channel size " + m_channel.getCount());
+                rpi_ws281x.ws2811_led_set(m_channel, i, (long) 0x200000);
+                System.out.println("backbuffer " + i + " set");
+                rpi_ws281x.ws2811_render(leds);
+                System.out.println("backbuffer at " + i + " is " + rpi_ws281x.ws2811_led_get(m_channel, i));
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
@@ -78,6 +95,7 @@ public class Neopixels {
         final int retval = rpi_ws281x.ws2811_init(leds);
         if (retval != 0)
             throw new RuntimeException("Neopixels initialisation exited with error " + retval);
+        this.channel = leds.getChannel();
     }
 
     public void render() {
@@ -92,6 +110,7 @@ public class Neopixels {
     }
 
     public void setColor(int num, NeoPixelColor color) {
+        System.out.println("backbuffer[" + num  + "] = " + color.getValue());
         rpi_ws281x.ws2811_led_set(channel, num, color.getValue());
     }
 
