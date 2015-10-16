@@ -43,6 +43,7 @@ public class Neopixels {
 
             for (int i = 0; i < 64; i++) {
                 np.setColor(i, swapped ? NeoPixelColor.RED : NeoPixelColor.GREEN);
+		System.out.println("setting " + i + " to "  +  ((swapped)? "red" : "green"));
                 np.render();
                 try {
                     Thread.sleep(1000);

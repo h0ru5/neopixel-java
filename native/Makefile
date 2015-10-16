@@ -1,8 +1,8 @@
 JNI_INCLUDE = "/usr/lib/jvm/jdk-8-oracle-arm-vfp-hflt/include/"
 
-all: java rpi_ws281x.so
+all: java librpi_ws281x.so demo
 
-rpi_ws281x.so: ws2811.o dma.o pwm.o rpi_ws281x_wrap.o
+librpi_ws281x.so: ws2811.o dma.o pwm.o rpi_ws281x_wrap.o
 	${CC} -shared -o $@ $^
 
 java: python/rpi_ws281x.i
@@ -14,3 +14,6 @@ rpi_ws281x_wrap.o: python/rpi_ws281x_wrap.c
 
 %.o: %.c
 	${CC} -fPIC -c $< -o $@
+
+demo: main.c librpi_ws281x.so
+	${CC} $? -L. -lrpi_ws281x -Wl,-rpath='$ORIGIN' -o $@
