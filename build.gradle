@@ -5,7 +5,7 @@ apply plugin: 'java'
 apply plugin: 'application'
 
 sourceCompatibility = 1.8
-mainClassName = "com.github.h0ru5.neopixel.Neopixels"
+mainClassName = "com.github.h0ru5.neopixel.DemoRunner"
 
 repositories {
     mavenCentral()
@@ -13,5 +13,7 @@ repositories {
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
+
+    compile group: 'net.java.dev.jna', name: 'jna-platform', version: '4.1.0'
 }
 
