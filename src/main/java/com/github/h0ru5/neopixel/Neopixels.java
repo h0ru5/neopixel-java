@@ -38,16 +38,51 @@ public class Neopixels {
        // np.render();
 
         ws2811_t leds = new ws2811_t();
+        System.out.println("setting null");
+
         for(int i=0;i<2;i++) {
             ws2811_channel_t channel_t = rpi_ws281x.ws2811_channel_get(leds, i);
             channel_t.setCount(64);
-            channel_t.setInvert(0);
             channel_t.setGpionum(18);
-            channel_t.setBrightness(0);
+            channel_t.setInvert(0);
+            leds.setChannel(channel_t);
         }
 
+
+        System.out.println("setting new channel");
+        ws2811_channel_t channel = leds.getChannel();
+        channel.setCount(64);
+        channel.setInvert(0);
+        channel.setGpionum(18);
+        channel.setBrightness(0);
+        leds.setChannel(channel);
+
+        for(int i=0;i<2;i++) {
+            ws2811_channel_t channel_t = rpi_ws281x.ws2811_channel_get(leds, i);
+            System.out.println("Channel " + i + ":");
+            StringBuilder sb = new StringBuilder();
+
+            sb.append("Count :").append(channel_t.getCount()).append("\n");
+            sb.append("Leds vector :").append(channel_t.getLeds()).append("\n");
+            sb.append("Leds pointer :").append( SWIGTYPE_p_unsigned_int.getCPtr(channel_t.getLeds())).append("\n");
+            System.out.print(sb.toString());
+        }
+
+
+        System.out.println("initializing...");
         rpi_ws281x.ws2811_init(leds);
         System.out.println("initialized");
+
+        for(int i=0;i<2;i++) {
+            ws2811_channel_t channel_t = leds.getChannel();
+            System.out.println("Channel " + i + ":");
+            StringBuilder sb = new StringBuilder();
+
+            sb.append("Count :").append(channel_t.getCount()).append("\n");
+            sb.append("Leds vector :").append(channel_t.getLeds()).append("\n");
+            sb.append("Leds pointer :").append( SWIGTYPE_p_unsigned_int.getCPtr(channel_t.getLeds())).append("\n");
+            System.out.print(sb.toString());
+        }
 
         boolean swapped = false;
 
@@ -56,12 +91,15 @@ public class Neopixels {
             for (int i = 0; i < 64; i++) {
                 //np.setColor(i, swapped ? NeoPixelColor.RED : NeoPixelColor.GREEN);
                 System.out.println("setting backbuffer " + i + " to " + (long) 0x200000);
-                ws2811_channel_t m_channel = rpi_ws281x.ws2811_channel_get(leds,0);
-                System.out.println("got channel size " + m_channel.getCount());
+                ws2811_channel_t m_channel = rpi_ws281x.ws2811_channel_get(leds,1);
+                System.out.println("got channel "  + SWIGTYPE_p_unsigned_int.getCPtr(m_channel.getLeds()) + " size " + m_channel.getCount());
+
+                System.out.println("backbuffer at " + i + " is " + rpi_ws281x.ws2811_led_get(m_channel, i));
+                System.out.println("setting backbuffer");
                 rpi_ws281x.ws2811_led_set(m_channel, i, (long) 0x200000);
                 System.out.println("backbuffer " + i + " set");
                 rpi_ws281x.ws2811_render(leds);
-                System.out.println("backbuffer at " + i + " is " + rpi_ws281x.ws2811_led_get(m_channel, i));
+
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
