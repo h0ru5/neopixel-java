@@ -3,7 +3,7 @@ package com.github.h0ru5.neopixel;
 public class NeopixelsBuilder {
     private int number;
     private int pin = 18;
-    private int freq_hz = 80000;
+    private int freq_hz = LibneopixelLibrary.WS2811_TARGET_FREQ;
     private int dma = 5;
     private boolean invert = false;
     private int brightness = 255;

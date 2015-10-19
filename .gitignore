@@ -1,5 +1,7 @@
 .gradle
 build/
+.idea/
+neopixel-java.iml
 
 # Ignore Gradle GUI config
 gradle-app.setting
