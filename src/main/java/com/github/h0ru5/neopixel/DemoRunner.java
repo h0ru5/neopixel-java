@@ -7,7 +7,7 @@ public class DemoRunner {
     public static void main(String[] args) {
         System.loadLibrary("rpi_ws281x");
 
-        Neopixels np = Neopixels.createWithDefaults(64);
+        Neopixels np = NeopixelsImpl.createWithDefaults(64);
         np.render();
 
         boolean swapped = false;

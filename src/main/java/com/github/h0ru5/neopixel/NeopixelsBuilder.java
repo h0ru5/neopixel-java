@@ -39,6 +39,6 @@ public class NeopixelsBuilder {
     }
 
     public Neopixels createNeopixels() {
-        return new Neopixels(number, pin, freq_hz, dma, invert, brightness);
+        return new NeopixelsImpl(number, pin, freq_hz, dma, invert, brightness);
     }
 }
