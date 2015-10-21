@@ -29,9 +29,7 @@ public class DemoRunner {
             if(nbright <= 0) {
                 nbright =0;
                 delta = - delta;
-                if (color.equals(NeoPixelColor.GREEN)) color = NeoPixelColor.RED;
-                else if (color.equals(NeoPixelColor.RED)) color = NeoPixelColor.BLUE;
-                else if (color.equals(NeoPixelColor.BLUE)) color = NeoPixelColor.GREEN;
+                color = swapcolor_adv(color);
                 np.colorWipe(color);
                 System.out.println("color swapped");
             } else if (nbright >= 255){
@@ -42,5 +40,26 @@ public class DemoRunner {
             np.setBrightness(nbright);
             np.render();
         }
+    }
+
+    private static NeoPixelColor swapcolor(NeoPixelColor color) {
+        NeoPixelColor nc = NeoPixelColor.fromValue(0);
+        if (color.equals(NeoPixelColor.GREEN)) nc = NeoPixelColor.RED;
+        else if (color.equals(NeoPixelColor.RED)) nc = NeoPixelColor.BLUE;
+        else if (color.equals(NeoPixelColor.BLUE)) nc = NeoPixelColor.GREEN;
+        return nc;
+    }
+
+    private static int num =0;
+
+    private static NeoPixelColor swapcolor_adv(NeoPixelColor color) {
+        ++num;
+        byte red = (byte) ((num % 2 == 0) ? 255:0);
+        byte green = (byte) ((num % 3 == 0 ) ? 255:0);
+        byte blue= (byte) ((num % 4 ==0 ) ? 255 : 0);
+        if(num>=100) num=0;
+        System.out.println("new color: " + red + ", " + green + ", " + blue);
+        NeoPixelColor nc = NeoPixelColor.fromBytes(red,green,blue);
+        return nc;
     }
 }
